@@ -12,14 +12,24 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Detailed Startup Log
+console.log('Server initializing in', process.env.NODE_ENV, 'mode');
+
 // Database Connection
-if (process.env.MONGODB_URI) {
-  mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('Could not connect to MongoDB', err));
-} else {
-  console.warn('MONGODB_URI is not defined in environment variables.');
-}
+const connectDB = async () => {
+  try {
+    if (!process.env.MONGODB_URI) {
+      console.error('CRITICAL: MONGODB_URI is missing from environment variables');
+      return;
+    }
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Successfully connected to MongoDB Atlas');
+  } catch (err) {
+    console.error('MongoDB Initial Connection Error:', err.message);
+  }
+};
+
+connectDB();
 
 // Routes
 const authRoutes = require('./routes/auth');
