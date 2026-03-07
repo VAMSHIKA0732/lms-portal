@@ -13,9 +13,13 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('Could not connect to MongoDB', err));
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('Could not connect to MongoDB', err));
+} else {
+  console.warn('MONGODB_URI is not defined in environment variables.');
+}
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -31,27 +35,35 @@ app.use('/api/assignments', assignmentRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/materials', materialRoutes);
 
-// Serve Frontend in Production
-if (process.env.NODE_ENV === 'production') {
+// Base API route
+app.get('/api', (req, res) => {
+  res.json({ message: 'Welcome to the LMS Portal API' });
+});
+
+// Serve Frontend in Production (Optional for Vercel, but kept for universal support)
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
   app.use(express.static(path.join(__dirname, '../client/dist')));
   
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
   });
 } else {
-  // Basic Route for Dev
   app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the LMS Portal API' });
+    res.json({ message: 'LMS Portal API is running' });
   });
 }
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!', error: err.message });
+  res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
