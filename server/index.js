@@ -19,13 +19,14 @@ console.log('Server initializing in', process.env.NODE_ENV, 'mode');
 const connectDB = async () => {
   try {
     if (!process.env.MONGODB_URI) {
-      console.error('CRITICAL: MONGODB_URI is missing from environment variables');
+      console.warn('⚠️ WARNING: MONGODB_URI is missing. Running in DEMO MODE with temporary in-memory data.');
       return;
     }
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Successfully connected to MongoDB Atlas');
+    console.log('✅ Successfully connected to MongoDB Atlas');
   } catch (err) {
-    console.error('MongoDB Initial Connection Error:', err.message);
+    console.error('❌ MongoDB Initial Connection Error:', err.message);
+    console.warn('🔄 Falling back to DEMO MODE...');
   }
 };
 
