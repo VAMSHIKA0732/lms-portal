@@ -50,12 +50,14 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the LMS Portal API' });
 });
 
-// Serve Frontend in Production (Optional for Vercel, but kept for universal support)
-if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+// Serve Frontend in Production
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../client/dist');
+  console.log('Serving static files from:', distPath);
+  app.use(express.static(distPath));
   
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+    res.sendFile(path.resolve(distPath, 'index.html'));
   });
 } else {
   app.get('/', (req, res) => {

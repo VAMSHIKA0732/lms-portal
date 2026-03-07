@@ -7,9 +7,9 @@
     "install-server": "cd server && npm install",
     "install-all": "npm run install-server && npm run install-client",
     "build-client": "cd client && npm run build",
-    "start": "cd server && node index.js",
+    "start": "node server/index.js",
     "share": "npx localtunnel --port 5000",
-    "heroku-postbuild": "npm run install-client && npm run build-client"
+    "build": "npm run install-server && npm run install-client && npm run build-client"
   },
   "keywords": [],
   "author": "",
