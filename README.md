@@ -3,6 +3,8 @@
 A full-stack Learning Management System (LMS) built with React, Node.js, and MongoDB.
 
 ## ✨ Features
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/VAMSHIKA0732/lms-portal)
+
 - **Role-Based Dashboards**: Distinct experiences for Teachers and Students.
 - **Course Management**: Teachers can create, manage, and monitor courses.
 - **Assignment System**: Create assignments with due dates, submit tasks, and receive grades/feedback.
