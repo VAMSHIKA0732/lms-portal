@@ -16,11 +16,17 @@ const Dashboard = () => {
 
 const Home = () => (
   <div className="page-container hero-section">
-    <h1>Learn Without Limits</h1>
-    <p>Empowering students and teachers with a modern LMS platform.</p>
+    <div className="hero-chip"><span></span>✦ Next-Gen Learning Platform</div>
+    <h1>Learn Without<br />Limits</h1>
+    <p>Empower your education with a modern LMS. Connect students and teachers in a beautifully designed learning space.</p>
     <div className="hero-btns">
-      <Link to="/login" className="btn-primary">Get Started</Link>
-      <Link to="/courses" className="btn-secondary">View Courses</Link>
+      <Link to="/login" className="btn-primary">Get Started →</Link>
+      <Link to="/courses" className="btn-secondary">Browse Courses</Link>
+    </div>
+    <div className="hero-stats">
+      <div className="hero-stat"><strong>500+</strong><span>Courses</span></div>
+      <div className="hero-stat"><strong>10k+</strong><span>Students</span></div>
+      <div className="hero-stat"><strong>200+</strong><span>Teachers</span></div>
     </div>
   </div>
 );
