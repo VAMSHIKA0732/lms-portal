@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { User, Clock } from 'lucide-react';
 
 const CourseCard = ({ course, onEnroll, isEnrolled, showEnroll = true }) => {
   return (
