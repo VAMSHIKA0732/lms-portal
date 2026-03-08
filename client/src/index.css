@@ -1,16 +1,16 @@
-/* Reset handled in App.css */
-* {
+/* IMPORTANT: This file is the single entry point for all styles */
+/* App.css is imported from App.jsx — this file just handles the base reset */
+
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html, body, #root {
-  height: 100%;
   min-height: 100vh;
 }
 
 body {
   display: block;
-  place-items: unset;
 }
