@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { Plus, Users, BookOpen, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -8,6 +9,10 @@ const TeacherDashboard = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [totalStudentsCount, setTotalStudentsCount] = useState(0);
+  const [myCourses, setMyCourses] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({ title: '', description: '', duration: '' });
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchMyCourses();

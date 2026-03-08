@@ -5,6 +5,7 @@ import Register from './pages/Register';
 
 import { Bell, User as UserIcon } from 'lucide-react';
 import StudentDashboard from './pages/StudentDashboard';
+import TeacherDashboard from './pages/TeacherDashboard';
 import CourseList from './pages/CourseList';
 import CourseDetails from './pages/CourseDetails';
 

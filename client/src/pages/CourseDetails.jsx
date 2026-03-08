@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { Calendar, CheckCircle, Clock as ClockIcon, FileText, Plus, Send, ChevronRight, User } from 'lucide-react';
