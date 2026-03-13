@@ -7,7 +7,6 @@ import StudentDashboard from './pages/StudentDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CourseList from './pages/CourseList';
 import CourseDetails from './pages/CourseDetails';
-import './App.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -44,7 +43,11 @@ const Sidebar = () => {
 
       <div className="sidebar-footer">
         {user ? (
-          <button className="sidebar-link logout-btn" onClick={logout} style={{width:'100%', color:'#f87171', background:'rgba(239,68,68,0.1)', border:'1px solid rgba(239,68,68,0.2)'}}>
+          <button
+            className="sidebar-link"
+            onClick={logout}
+            style={{ width:'100%', color:'#ef4444', background:'rgba(239,68,68,0.1)', border:'1px solid rgba(239,68,68,0.2)' }}
+          >
             <LogOut size={17} /> Sign Out
           </button>
         ) : (
@@ -57,6 +60,51 @@ const Sidebar = () => {
   );
 };
 
+/* ── TOP NAV ── */
+const TopNav = () => {
+  const { user } = useAuth();
+  return (
+    <nav className="main-nav">
+      <div className="nav-logo">
+        <div className="nav-logo-icon">📚</div>
+        EduPortal
+      </div>
+
+      <div className="nav-search">
+        <Search size={15} className="nav-search-icon" />
+        <input type="text" placeholder="Search courses, topics..." />
+      </div>
+
+      <div className="nav-actions">
+        {user && (
+          <div className="nav-points-badge">
+            <Trophy size={13} /> 850 pts
+          </div>
+        )}
+        <div className="nav-links">
+          {user ? (
+            <>
+              <Link to="/courses">Courses</Link>
+              <div className="nav-divider" />
+              <div className="notification-bell" style={{ display:'flex' }}>
+                <Bell size={19} />
+                <div className="notif-dot" />
+              </div>
+              <div className="nav-profile-btn" title={user.name}>{user.name[0].toUpperCase()}</div>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Sign In</Link>
+              <Link to="/register" className="btn-nav-register">Register</Link>
+            </>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+/* ── HOME PAGE ── */
 const Home = () => (
   <div className="page-container hero-section">
     <div className="hero-chip"><span></span>✦ Next-Gen Learning Platform</div>
@@ -74,66 +122,66 @@ const Home = () => (
   </div>
 );
 
+/* ── MAIN APP WITH SIDEBAR LAYOUT ── */
+const AppWithSidebar = ({ children }) => (
+  <div className="app-main">
+    <TopNav />
+    <div className="app-body">
+      <Sidebar />
+      <main className="main-content">
+        {children}
+      </main>
+    </div>
+  </div>
+);
+
+/* ── AUTH LAYOUT (Full Screen, No Sidebar) ── */
+const AppFullScreen = ({ children }) => (
+  <div className="app-main">
+    {children}
+  </div>
+);
+
 function AppContent() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
-    <div className="app-main">
-      {/* Top Nav */}
-      <nav className="main-nav">
-        <div className="nav-logo">
-          <div className="nav-logo-icon">📚</div>
-          EduPortal
-        </div>
+    <Routes>
+      {/* Auth routes — full screen, no sidebar */}
+      <Route path="/login" element={
+        user ? <Navigate to="/dashboard" /> :
+        <AppFullScreen><Login /></AppFullScreen>
+      } />
+      <Route path="/register" element={
+        user ? <Navigate to="/dashboard" /> :
+        <AppFullScreen><Register /></AppFullScreen>
+      } />
 
-        <div className="nav-search">
-          <Search size={15} className="nav-search-icon" />
-          <input type="text" placeholder="Search courses, topics..." />
-        </div>
-
-        <div className="nav-actions">
-          {user && (
-            <div className="nav-points-badge">
-              <Trophy size={13} /> 850 pts
-            </div>
-          )}
-          <div className="nav-links">
-            {user ? (
-              <>
-                <Link to="/courses">Courses</Link>
-                <div className="nav-divider" />
-                <button className="notification-bell" style={{background:'none',border:'none',cursor:'pointer',display:'flex'}}>
-                  <Bell size={19} />
-                  <div className="notif-dot" />
-                </button>
-                <button className="nav-profile-btn" title={user.name}>{user.name[0].toUpperCase()}</button>
-              </>
-            ) : (
-              <>
-                <Link to="/login">Sign In</Link>
-                <Link to="/register" className="btn-primary" style={{padding:'0.4rem 1rem',fontSize:'0.82rem'}}>Register</Link>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
-
-      {/* Body */}
-      <div className="app-body">
-        <Sidebar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
-            <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
-            <Route path="/dashboard" element={user ? <><div className="content-header"><LayoutDashboard size={16}/><span>Dashboard</span></div><div className="content-inner"><Dashboard /></div></> : <Navigate to="/login" />} />
-            <Route path="/courses" element={<><div className="content-header"><BookOpen size={16}/><span>Course Catalog</span></div><div className="content-inner"><CourseList /></div></>} />
-            <Route path="/course/:id" element={user ? <CourseDetails /> : <Navigate to="/login" />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
+      {/* Main app routes — with sidebar */}
+      <Route path="/" element={
+        <AppWithSidebar><Home /></AppWithSidebar>
+      } />
+      <Route path="/dashboard" element={
+        user
+          ? <AppWithSidebar>
+              <div className="content-header"><LayoutDashboard size={16} /><span>Dashboard</span></div>
+              <div className="content-inner"><Dashboard /></div>
+            </AppWithSidebar>
+          : <Navigate to="/login" />
+      } />
+      <Route path="/courses" element={
+        <AppWithSidebar>
+          <div className="content-header"><BookOpen size={16} /><span>Course Catalog</span></div>
+          <div className="content-inner"><CourseList /></div>
+        </AppWithSidebar>
+      } />
+      <Route path="/course/:id" element={
+        user
+          ? <AppWithSidebar><CourseDetails /></AppWithSidebar>
+          : <Navigate to="/login" />
+      } />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 }
 
